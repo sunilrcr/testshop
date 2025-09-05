@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -8,7 +8,7 @@
     <groupId>com.reljicd</groupId>
     <artifactId>shopping-cart</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>shopping-cart</name>
     <description>Demo project for Spring Boot Shopping Cart</description>
@@ -34,7 +34,7 @@
     </properties>
 
     <dependencies>
-        <!-- Your existing dependencies remain unchanged -->
+        <!-- Spring Boot dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -65,9 +65,23 @@
             <artifactId>thymeleaf-extras-springsecurity4</artifactId>
         </dependency>
 
+        <!-- Exclude embedded Tomcat for WAR deployment -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Provided Tomcat (container will supply this) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -115,7 +129,7 @@
 
     <build>
         <plugins>
-            <!-- Ensure Java 17 compilation -->
+            <!-- Java 17 compilation -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -126,11 +140,16 @@
                 </configuration>
             </plugin>
 
+            <!-- Spring Boot WAR support -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip> <!-- skip re-packaging as jar -->
+                </configuration>
             </plugin>
 
+            <!-- Jacoco for code coverage -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -154,6 +173,7 @@
         </plugins>
     </build>
 
+    <!-- Nexus/Artifactory Deployment -->
     <distributionManagement>
         <repository>
             <id>maven-releases</id>
@@ -167,4 +187,5 @@
         </snapshotRepository>
     </distributionManagement>
 </project>
+
 
